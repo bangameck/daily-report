@@ -1,0 +1,63 @@
+@import "flatpickr/dist/flatpickr.min.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* [FIX] Membuat Datepicker Flowbite Mobile-Friendly */
+@media (max-width: 640px) {
+  .datepicker-picker {
+    /* Paksa lebarnya jadi 90% dari lebar layar (viewport width),
+      bukan ukuran piksel tetap.
+    */
+    width: 90vw !important;
+
+    /* Atur ulang posisinya agar pas di tengah layar.
+      Bukan lagi di samping input.
+    */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    /* Hapus positioning kanan/kiri yang mungkin bentrok */
+    right: auto !important;
+  }
+}
+
+.flatpickr-calendar {
+  font-family: 'Jost', sans-serif;
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+}
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
+  background: #075985; /* sky-800 */
+  border-color: #075985;
+}
+.flatpickr-day:hover {
+  background: #e0f2fe; /* sky-100 */
+}
+.flatpickr-day.today {
+  border-color: #0ea5e9; /* sky-500 */
+}
+.flatpickr-day.today:hover {
+  background: #bae6fd; /* sky-200 */
+}
+.flatpickr-months .flatpickr-month {
+  color: #0c4a6e; /* sky-900 */
+  fill: #0c4a6e;
+}
+.flatpickr-months .flatpickr-prev-month:hover svg,
+.flatpickr-months .flatpickr-next-month:hover svg {
+  fill: #0284c7; /* sky-600 */
+}
+.numInputWrapper:hover,
+.flatpickr-time input:hover,
+.flatpickr-time .flatpickr-am-pm:hover {
+  background: #f0f9ff; /* sky-50 */
+}
+span.flatpickr-weekday {
+  color: #374151; /* gray-700 */
+  font-weight: 600;
+}
