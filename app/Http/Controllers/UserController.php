@@ -71,19 +71,17 @@ class UserController extends Controller
 
         // 1. Admin/Pimpinan (Role 1 & 5) bisa lihat semua
         if (in_array($authUser->role_id, [1, 5])) {
-            // Lanjutkan, tidak perlu dicek
+            // Lanjutkan
         }
         // 2. Karu/Pawas (Role 3 & 4) hanya bisa lihat regunya
         elseif (in_array($authUser->role_id, [3, 4])) {
-            if (! $authUser->regu_id) {
-                return redirect()->route('users.index')->with('error', 'Anda tidak terdaftar di regu manapun.');
-            }
-            if ($authUser->regu_id !== $user->regu_id) {
-                return redirect()->route('users.index')->with('error', 'Anda hanya bisa melihat detail anggota regu Anda.');
+            // Jika user yang login tidak punya regu, atau regunya beda
+            if (! $authUser->regu_id || $authUser->regu_id !== $user->regu_id) {
+                return redirect()->route('dashboard')->with('error', 'Anda hanya bisa melihat detail anggota regu Anda.');
             }
         }
-        // 3. Role lain (cth: Anggota) tidak bisa lihat profil orang lain
-        else {
+        // 3. Role lain (cth: Anggota) hanya bisa lihat profil sendiri
+        elseif ($authUser->id !== $user->id) {
             return redirect()->route('dashboard')->with('error', 'Anda tidak punya hak akses.');
         }
 
@@ -92,14 +90,41 @@ class UserController extends Controller
         // Eager load semua relasi
         $user->load('role', 'regu', 'profile', 'laporanHarian');
 
-        // Hitung TMT
-        $tmt            = $user->profile?->tmt;
-        $bergabungSejak = $tmt ? $tmt->diffForHumans() : 'Belum Diatur';
+        // [PERBAIKAN] Hitung Lama Bekerja (Tahun, Bulan, Hari)
+        $lamaBekerja = 'Belum Diatur';
+        if ($tmt = $user->profile?->tmt) {
+            $diff  = $tmt->diff(now());
+            $parts = [];
+            if ($diff->y > 0) {
+                $parts[] = "{$diff->y} Thn";
+            }
+
+            if ($diff->m > 0) {
+                $parts[] = "{$diff->m} Bln";
+            }
+
+            if ($diff->d > 0) {
+                $parts[] = "{$diff->d} Hr";
+            }
+
+            $lamaBekerja = $parts ? implode(', ', $parts) : 'Kurang dari 1 hari';
+        }
 
         // Hitung Total Laporan
         $totalLaporan = $user->laporanHarian->count();
 
-        return view('users.show', compact('user', 'bergabungSejak', 'totalLaporan'));
+                                  // [BARU] Ambil data anggota regu lainnya
+        $anggotaRegu = collect(); // Default koleksi kosong
+        if ($user->regu_id) {
+            $anggotaRegu = User::where('regu_id', $user->regu_id)
+                ->where('id', '!=', $user->id) // Kecualikan diri sendiri
+                ->with('profile')              // Ambil sosmed mereka juga
+                ->orderBy('role_id')           // Tampilkan Karu/Pawas dulu
+                ->orderBy('nama')
+                ->get();
+        }
+
+        return view('users.show', compact('user', 'lamaBekerja', 'totalLaporan', 'anggotaRegu'));
     }
 
     public function edit(User $user): View

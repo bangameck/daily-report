@@ -78,7 +78,8 @@
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Users</a>
                         <a href="{{ route('regu.index') }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Regu</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Kategori
+                        <a href="{{ route('kategori-laporan.index') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Kategori
                             Laporan</a>
                     </div>
                 </div>
@@ -151,7 +152,7 @@
                     </svg>
                     <span class="text-xs mt-1">Laporan</span>
                 </a>
-                <a href="#"
+                <a href="{{ route('laporan.create') }}"
                     class="flex items-center justify-center h-16 w-16 bg-gradient-to-r from-sky-800 to-green-700 text-white rounded-full shadow-lg transform -translate-y-6 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-700 hover:scale-105 transition-transform">
                     <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="3">

@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\KategoriLaporanController;
+use App\Http\Controllers\LaporanHarianController;
 use App\Http\Controllers\ReguController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
@@ -33,6 +35,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/users/check-email', [UserController::class, 'checkEmail'])->name('users.checkEmail');
 
     Route::resource('regu', ReguController::class);
+
+    Route::resource('kategori-laporan', KategoriLaporanController::class);
+
+    Route::resource('laporan', LaporanHarianController::class);
+
+    Route::patch('laporan/{laporan}/approve', [LaporanHarianController::class, 'approve'])->name('laporan.approve');
+    Route::patch('laporan/{laporan}/reject', [LaporanHarianController::class, 'reject'])->name('laporan.reject');
 
 });
 

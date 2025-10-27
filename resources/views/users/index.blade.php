@@ -98,10 +98,6 @@
                                                 Detail User
                                             </x-dropdown-link>
 
-                                            <x-dropdown-link :href="route('users.show', $user)">
-                                                Edit User Profile
-                                            </x-dropdown-link>
-
                                             <x-dropdown-link :href="route('users.edit', $user)">
                                                 Edit User
                                             </x-dropdown-link>
